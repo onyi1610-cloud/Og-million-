@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App - Task Manager</title>
+    <link rel="stylesheet" href="todo-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="stars"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-tasks"></i> TASK MASTER
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#todos">Tasks</a></li>
+                <li><a href="#stats">Stats</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-emoji">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 class="hero-title">ORGANIZE YOUR DAY</h1>
+            <p class="hero-subtitle">Smart To-Do List with Local Storage</p>
+            <p class="hero-description">Create, manage, and track your tasks efficiently. Your data is saved locally!</p>
+            <a href="#todos" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Start Managing Tasks
+            </a>
+        </div>
+    </section>
+
+    <!-- Main Todo Section -->
+    <section id="todos" class="todos-section">
+        <div class="container">
+            <h2>Your Task List</h2>
+
+            <!-- Add Todo Form -->
+            <div class="add-todo-panel">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="todoInput" 
+                        class="todo-input" 
+                        placeholder="Add a new task... (Press Enter or Click Add)"
+                        autocomplete="off"
+                    >
+                    <button id="addBtn" class="btn btn-primary btn-add">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                </div>
+
+                <!-- Priority Selector -->
+                <div class="priority-selector">
+                    <label>Priority:</label>
+                    <div class="priority-options">
+                        <input type="radio" name="priority" value="low" id="priorityLow">
+                        <label for="priorityLow" class="priority-badge low">
+                            <i class="fas fa-arrow-down"></i> Low
+                        </label>
+                        
+                        <input type="radio" name="priority" value="medium" id="priorityMedium" checked>
+                        <label for="priorityMedium" class="priority-badge medium">
+                            <i class="fas fa-minus"></i> Medium
+                        </label>
+                        
+                        <input type="radio" name="priority" value="high" id="priorityHigh">
+                        <label for="priorityHigh" class="priority-badge high">
+                            <i class="fas fa-arrow-up"></i> High
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Category Selector -->
+                <div class="category-selector">
+                    <label>Category:</label>
+                    <select id="categorySelect" class="select-control">
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="health">Health</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Filter Panel -->
+            <div class="filter-panel">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list"></i> All
+                </button>
+                <button class="filter-btn" data-filter="active">
+                    <i class="fas fa-circle"></i> Active
+                </button>
+                <button class="filter-btn" data-filter="completed">
+                    <i class="fas fa-check-circle"></i> Completed
+                </button>
+                <button class="filter-btn" data-filter="high">
+                    <i class="fas fa-arrow-up"></i> High Priority
+                </button>
+                <button class="sort-btn">
+                    <i class="fas fa-sort"></i> Sort
+                </button>
+                <button class="clear-btn">
+                    <i class="fas fa-trash"></i> Clear Completed
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading your tasks...</p>
+            </div>
+
+            <!-- Todo List -->
+            <div id="todoList" class="todo-list">
+                <!-- Todos will be inserted here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>No tasks yet</h3>
+                <p>Add a new task to get started!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section id="stats" class="stats-section">
+        <div class="container">
+            <h2>Your Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalTasks">0</h3>
+                        <p>Total Tasks</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="completedTasks">0</h3>
+                        <p>Completed</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon active">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="activeTasks">0</h3>
+                        <p>Active</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon percentage">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="completionRate">0%</h3>
+                        <p>Completion Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Chart -->
+            <div class="progress-section">
+                <h3>Task Completion Progress</h3>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p class="progress-text">Keep up the great work!</p>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="category-breakdown">
+                <h3>Tasks by Category</h3>
+                <div id="categoryStats" class="category-stats">
+                    <!-- Stats will be generated here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Settings Section -->
+    <section id="settings" class="settings-section">
+        <div class="container">
+            <h2>Settings & Options</h2>
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3><i class="fas fa-moon"></i> Theme</h3>
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Dark Mode</span>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-bell"></i> Notifications</h3>
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notificationToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Enable Notifications</span>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-download"></i> Export Tasks</h3>
+                    <button id="exportBtn" class="btn btn-secondary btn-block">
+                        <i class="fas fa-download"></i> Export as JSON
+                    </button>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-upload"></i> Import Tasks</h3>
+                    <button id="importBtn" class="btn btn-secondary btn-block">
+                        <i class="fas fa-upload"></i> Import from JSON
+                    </button>
+                    <input type="file" id="importFile" style="display: none;" accept=".json">
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-trash-alt"></i> Reset All</h3>
+                    <button id="resetBtn" class="btn btn-danger btn-block">
+                        <i class="fas fa-trash-alt"></i> Delete All Tasks
+                    </button>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-info-circle"></i> Storage Info</h3>
+                    <p id="storageInfo" class="storage-info">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Task Master | Productivity App</p>
+            <p>Built with <i class="fas fa-heart"></i> for productivity</p>
+        </div>
+    </footer>
+
+    <!-- Hidden notification for copy -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script src="todo-script.js"></script>
+</body>
+</html>
